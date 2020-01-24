@@ -7,13 +7,13 @@ class SpEnv(gym.Env):
 
     continuous = False
 
-    def __init__(self, minLimit=None, maxLimit=None, verbose=False, operationCost = 0, output=''):
+    def __init__(self, dataset='sp500.csv', minLimit=None, maxLimit=None, verbose=False, operationCost = 0, output=''):
         self.verbose = verbose
         self.operationCost = operationCost
         self.currentDay = 1
         #if(verbose):
         #    print("Episode,Date,Operation,Steps,Reward,Capital,missPerc,hitPerc,zeroPerc,IndexIn,TimeIn,IndexOut,TimeOut,hold,long,short,avgRw,day")
-        spTimeserie = pandas.read_csv('sp500.csv')[minLimit:maxLimit]
+        spTimeserie = pandas.read_csv(dataset)[minLimit:maxLimit]
         dates = spTimeserie.loc[:, 'Date'].tolist()
         timeT = spTimeserie.loc[:, 'Time'].tolist()
         Open = spTimeserie.loc[:, 'Open'].tolist()
@@ -65,6 +65,9 @@ class SpEnv(gym.Env):
         self.high = numpy.array([self.maxValue, self.maxTime, 2])
         #self.action_space = gym.spaces.Discrete(3) # the action space is just 0,1,2 which means nop,buy,sell
         self.observation_space = Box(self.low, self.high, dtype=numpy.float32)
+        currentValue = self.history[self.currentObservation]['Value']
+        currentTime = self.history[self.currentObservation]['Time']
+        self.prevState = [currentValue, currentTime, self.currentState]
         # we clean our memory #
         del(dates)            #
         del(Open)             #
@@ -80,6 +83,9 @@ class SpEnv(gym.Env):
             return self.prevState, -1000, False, {}
         if self.currentState == 2 and action == 2:
             return self.prevState, -1000, False, {}
+
+        today,tomorrow = self.getTodayTomorrow()
+
         if self.currentState == 0: # NONE
             self.operation = action
             self.currentState = action
@@ -102,7 +108,7 @@ class SpEnv(gym.Env):
             if action == 0:
                 reward = 0
                 self.done = False
-            elif action == 2:
+            elif action == 2 or today != tomorrow:
                 reward = (self.currentValue + self.history[self.currentObservation]['Open'])*50 - self.operationCost
                 self.priceSecond = self.history[self.currentObservation]['Open']
                 self.timeSecond = self.history[self.currentObservation]['TimeT']
@@ -116,7 +122,7 @@ class SpEnv(gym.Env):
             if action == 0:
                 reward = 0
                 self.done = False
-            elif action == 1:
+            elif action == 1 or today != tomorrow:
                 reward = (self.currentValue - self.history[self.currentObservation]['Open'])*50 - self.operationCost
                 self.priceSecond = self.history[self.currentObservation]['Open']
                 self.timeSecond = self.history[self.currentObservation]['TimeT']
@@ -126,7 +132,6 @@ class SpEnv(gym.Env):
                 reward = 0
                 self.done = False
 
-        today,tomorrow = self.getTodayTomorrow()
 
         if today != tomorrow:
             self.done = True
@@ -263,6 +268,3 @@ class SpEnv(gym.Env):
     def changeOutput(self,output = ''):
         if(output!=''):
             self.output=open(output,'w+')
-
-def getEnv(minLimit=None, maxLimit=None, verbose=False, operationCost = 0):
-    return SpEnv(minLimit,maxLimit,verbose,operationCost)
