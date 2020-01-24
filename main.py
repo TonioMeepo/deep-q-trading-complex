@@ -27,9 +27,12 @@ model.add(Dense(nb_actions))
 model.add(Activation('linear'))
 
 policy = EpsGreedyQPolicy(eps = 0.5)
-'''policyTest = 
+
+'''
 policy = IntradayPolicy.getPolicy(env = environment, eps = 0.5, stopLoss=-500, minOperationLength=5)
-policyTest = IntradayPolicy.getPolicy(env = testEnv, eps = 0, stopLoss=-500, minOperationLength=5)'''
+policyTest = IntradayPolicy.getPolicy(env = testEnv, eps = 0, stopLoss=-500, minOperationLength=5)
+'''
+
 memory = SequentialMemory(limit=100000, window_length=300)
 dqn = DQNAgent(model=model, nb_actions=nb_actions,enable_dueling_network=True, memory=memory, nb_steps_warmup=4000,
 target_model_update=1e-2, policy=policy)
