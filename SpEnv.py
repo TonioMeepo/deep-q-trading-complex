@@ -80,9 +80,9 @@ class SpEnv(gym.Env):
 
     def step(self, action):
         if self.currentState == 1 and action == 1:
-            return self.prevState, -1000, False, {}
+            return self.prevState, -10000, True, {}
         if self.currentState == 2 and action == 2:
-            return self.prevState, -1000, False, {}
+            return self.prevState, -10000, True, {}
 
         today,tomorrow = self.getTodayTomorrow()
 
@@ -113,7 +113,6 @@ class SpEnv(gym.Env):
                 self.priceSecond = self.history[self.currentObservation]['Open']
                 self.timeSecond = self.history[self.currentObservation]['TimeT']
                 self.done = True
-                self.currentState = 0
             else:
                 reward = 0
                 self.done = False
@@ -127,7 +126,6 @@ class SpEnv(gym.Env):
                 self.priceSecond = self.history[self.currentObservation]['Open']
                 self.timeSecond = self.history[self.currentObservation]['TimeT']
                 self.done = True
-                self.currentState = 0
             else:
                 reward = 0
                 self.done = False

@@ -11,8 +11,8 @@ import datetime
 
 
 #842063
-environment = SpEnv.SpEnv(maxLimit = 1893600, verbose=True, output='resultsTrain.csv')
-testEnv = SpEnv.SpEnv(minLimit = 1893601, verbose=True, output='resultsTest.csv')
+environment = SpEnv.SpEnv(maxLimit = 1893600, verbose=True,operationCost=1, output='resultsTrain.csv')
+testEnv = SpEnv.SpEnv(minLimit = 1893601, verbose=True,operationCost=1, output='resultsTest.csv')
 nb_actions = 3#environment.action_space.n
 
 model = Sequential()
