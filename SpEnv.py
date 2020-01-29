@@ -108,27 +108,21 @@ class SpEnv(gym.Env):
             if action == 0:
                 reward = 0
                 self.done = False
-            elif action == 2 or today != tomorrow:
+            if action == 2 or today != tomorrow:
                 reward = (self.currentValue + self.history[self.currentObservation]['Open'])*50 - self.operationCost
                 self.priceSecond = self.history[self.currentObservation]['Open']
                 self.timeSecond = self.history[self.currentObservation]['TimeT']
                 self.done = True
-            else:
-                reward = 0
-                self.done = False
 
         else: # SHORT
             if action == 0:
                 reward = 0
                 self.done = False
-            elif action == 1 or today != tomorrow:
+            if action == 1 or today != tomorrow:
                 reward = (self.currentValue - self.history[self.currentObservation]['Open'])*50 - self.operationCost
                 self.priceSecond = self.history[self.currentObservation]['Open']
                 self.timeSecond = self.history[self.currentObservation]['TimeT']
                 self.done = True
-            else:
-                reward = 0
-                self.done = False
 
 
         if today != tomorrow:
