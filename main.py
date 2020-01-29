@@ -8,8 +8,12 @@ from rl.agents.dqn import DQNAgent
 from rl.memory import SequentialMemory
 from rl.policy import EpsGreedyQPolicy
 import datetime
+import telegram as te
+from telegramSettings import telegramToken, telegramChatID
 
-
+bot = te.Bot(token=telegramToken)
+startingTime=datetime.datetime.now()
+bot.send_message(chat_id=telegramChatID, text="Experiment started "+str(datetime.datetime.now()))
 #842063
 environment = SpEnv.SpEnv(maxLimit = 1893600, verbose=True,operationCost=1, output='resultsTrain.csv')
 testEnv = SpEnv.SpEnv(minLimit = 1893601, verbose=True,operationCost=1, output='resultsTest.csv')
@@ -42,6 +46,9 @@ dqn.compile(Adam(lr=1e-3), metrics=['mae'])
 
 print(datetime.datetime.now())
 
+startingTime=datetime.datetime.now()
+bot.send_message(chat_id=telegramChatID, text="Experiment started - "+str(datetime.datetime.now()))
+
 policy.eps=0.5
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
@@ -72,7 +79,9 @@ policy.eps=0
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
-
+bot.send_message(chat_id=telegramChatID, text="Training ended - "+str(datetime.datetime.now()))
 print("End of traning")
 print(datetime.datetime.now())
 dqn.test(testEnv, nb_episodes=2000, verbose=0, visualize=False)
+
+bot.send_message(chat_id=telegramChatID, text="Test ended - "+str(datetime.datetime.now()))
