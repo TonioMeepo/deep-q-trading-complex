@@ -2,9 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-train = pd.read_csv("resultsTest.csv", index_col="episode")
 
-folder='testing'
+
+train = pd.read_csv("resultsTrain.csv", index_col="episode")
+
+folder='training'
 
 plt.figure()
 plt.plot(train['operation'].tolist())
