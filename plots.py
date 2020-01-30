@@ -40,3 +40,9 @@ plt.title("CAPITAL")
 plt.axhline(0,color="grey")
 plt.savefig("figures/"+folder+"/capital.png")
 plt.show()
+
+
+l1 = train['reward'].tolist()
+l2 = train['day'].tolist()
+
+tupleList = list(map(lambda x, y:(x,y), l1, l2))
