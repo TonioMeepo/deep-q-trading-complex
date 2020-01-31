@@ -43,6 +43,7 @@ class SpEnv(gym.Env):
         self.currentState = 0 # (0 = nothing) (1 = long) (2 = short)
         self.currentValue = 0
         self.currentObservation = observationWindow + 1  # number of executed steps
+        self.observationWindow=observationWindow
         self.limit = len(Open) # the end of my timeserie
         print()
         print()
@@ -65,10 +66,12 @@ class SpEnv(gym.Env):
         self.high = numpy.array([self.maxValue, self.maxTime, 2])
         #self.action_space = gym.spaces.Discrete(3) # the action space is just 0,1,2 which means nop,buy,sell
         #self.observation_space = Box(self.low, self.high, dtype=numpy.float32)
-        self.observationWindow = observationWindow
-        currentValue = list(map(lambda x : x['Value'], self.history[self.currentObservation-self.observationWindow:self.currentObservation]))
+        
+        currentValue = list(map(lambda x: x['Value'],self.history[self.currentObservation-self.observationWindow:self.currentObservation]))
+        currentValue.append(self.currentState)
         #currentTime = self.history[self.currentObservation]['Time']
-        self.prevState = currentValue.append(self.currentState)
+        state = numpy.array(currentValue)
+        self.prevState = state
         # we clean our memory #
         del(dates)            #
         del(Open)             #
@@ -81,9 +84,9 @@ class SpEnv(gym.Env):
 
     def step(self, action):
         if self.currentState == 1 and action == 1:
-            return self.prevState, -10000, True, {}
+            return self.prevState, -10000, False, {}
         if self.currentState == 2 and action == 2:
-            return self.prevState, -10000, True, {}
+            return self.prevState, -10000, False, {}
 
         today,tomorrow = self.getTodayTomorrow()
 
@@ -132,10 +135,11 @@ class SpEnv(gym.Env):
 
 
 
+        
         currentValue = list(map(lambda x: x['Value'],self.history[self.currentObservation-self.observationWindow:self.currentObservation]))
+        currentValue.append(self.currentState)
         #currentTime = self.history[self.currentObservation]['Time']
-        state = currentValue.append(self.currentState)
-        state = numpy.array([state])
+        state = numpy.array(currentValue)
         if not self.done:
             self.currentObservation+=1
             if self.currentObservation>=self.limit:
@@ -170,10 +174,10 @@ class SpEnv(gym.Env):
         self.done = False
         self.currentState = 0
         currentValue = list(map(lambda x: x['Value'],self.history[self.currentObservation-self.observationWindow:self.currentObservation]))
+        currentValue.append(self.currentState)
         #currentTime = self.history[self.currentObservation]['Time']
-        state = currentValue.append(self.currentState)
-        state = numpy.array([state])
-
+        state = numpy.array(currentValue)
+        
         if self.episodeReward > 0:
             self.nbHit += 1
         elif self.episodeReward < 0:

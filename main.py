@@ -20,7 +20,7 @@ testEnv = SpEnv.SpEnv(minLimit = 1893601, verbose=True,operationCost=0,observati
 nb_actions = 3#environment.action_space.n
 
 model = Sequential()
-model.add(Flatten(input_shape=(20,1)))
+model.add(Flatten(input_shape=(20,) + (environment.observationWindow+1,)))
 model.add(Dense(128))
 model.add(Activation('sigmoid'))
 model.add(Dense(256))
