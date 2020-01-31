@@ -53,22 +53,35 @@ policy.eps=0.01
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
+bot.send_message(chat_id=telegramChatID, text="20 %")
 
 policy.eps= 0.001
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
+
+bot.send_message(chat_id=telegramChatID, text="40 %")
+
 policy.eps=0.001
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
-policy.eps=0
-dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
-dqn.save_weights("Q.weights", overwrite=True)
+
+bot.send_message(chat_id=telegramChatID, text="60 %")
 
 policy.eps=0
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
+
+
+bot.send_message(chat_id=telegramChatID, text="80 %")
+
+policy.eps=0
+dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
+dqn.save_weights("Q.weights", overwrite=True)
+
+
+bot.send_message(chat_id=telegramChatID, text="100 %")
 
 bot.send_message(chat_id=telegramChatID, text="Training ended - "+str(datetime.datetime.now()))
 print("End of traning")
