@@ -12,15 +12,14 @@ import telegram as te
 from telegramSettings import telegramToken, telegramChatID
 
 bot = te.Bot(token=telegramToken)
-startingTime=datetime.datetime.now()
-bot.send_message(chat_id=telegramChatID, text="Experiment started "+str(datetime.datetime.now()))
+
 #842063
 environment = SpEnv.SpEnv(maxLimit = 1893600, verbose=True,operationCost=0,observationWindow=600, output='resultsTrain.csv')
 testEnv = SpEnv.SpEnv(minLimit = 1893601, verbose=True,operationCost=0,observationWindow=600, output='resultsTest.csv')
-nb_actions = 3#environment.action_space.n
+nb_actions = environment.action_space.n
 
 model = Sequential()
-model.add(Flatten(input_shape=(20,) + (environment.observationWindow+1,)))
+model.add(Flatten(input_shape=(20,) + environment.observation_space.shape))
 model.add(Dense(128))
 model.add(Activation('sigmoid'))
 model.add(Dense(256))
@@ -32,10 +31,7 @@ model.add(Activation('linear'))
 
 policy = EpsGreedyQPolicy(eps = 0.5)
 
-'''
-policy = IntradayPolicy.getPolicy(env = environment, eps = 0.5, stopLoss=-500, minOperationLength=5)
-policyTest = IntradayPolicy.getPolicy(env = testEnv, eps = 0, stopLoss=-500, minOperationLength=5)
-'''
+
 
 memory = SequentialMemory(limit=100000, window_length=20)
 dqn = DQNAgent(model=model, nb_actions=nb_actions,enable_dueling_network=True, memory=memory, nb_steps_warmup=4000,

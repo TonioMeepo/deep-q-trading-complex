@@ -62,10 +62,10 @@ class SpEnv(gym.Env):
         self.maxValue = max(values)
         self.minTime = min(time)
         self.maxTime = max(time)
-        self.low = numpy.array([self.minValue, self.minTime, 0])
-        self.high = numpy.array([self.maxValue, self.maxTime, 2])
-        #self.action_space = gym.spaces.Discrete(3) # the action space is just 0,1,2 which means nop,buy,sell
-        #self.observation_space = Box(self.low, self.high, dtype=numpy.float32)
+        self.low = numpy.array([self.minValue for i in range(self.observationWindow)] + [0])
+        self.high =  numpy.array([self.maxValue for i in range(self.observationWindow)] + [2])
+        self.action_space = gym.spaces.Discrete(3) # the action space is just 0,1,2 which means no-operation,buy,sell
+        self.observation_space = Box(self.low, self.high, dtype=numpy.float32)
         
         currentValue = list(map(lambda x: x['Value'],self.history[self.currentObservation-self.observationWindow:self.currentObservation]))
         currentValue.append(self.currentState)
