@@ -4,9 +4,9 @@ import numpy as np
 
 
 
-train = pd.read_csv("resultsTrain.csv", index_col="episode")
+train = pd.read_csv("resultsTest.csv", index_col="episode")
 
-folder='training'
+folder='testing'
 
 plt.figure()
 plt.plot(train['operation'].tolist())
