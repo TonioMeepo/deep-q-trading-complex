@@ -49,34 +49,34 @@ print(datetime.datetime.now())
 startingTime=datetime.datetime.now()
 bot.send_message(chat_id=telegramChatID, text="Experiment started - "+str(datetime.datetime.now()))
 
-policy.eps=0.01
+policy.eps=1
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
 bot.send_message(chat_id=telegramChatID, text="20 %")
 
-policy.eps= 0.001
+policy.eps= 0.5
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
 
 bot.send_message(chat_id=telegramChatID, text="40 %")
 
-policy.eps=0.001
+policy.eps=0.25
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
 
 bot.send_message(chat_id=telegramChatID, text="60 %")
 
-policy.eps=0
+policy.eps=0.125
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
 
 bot.send_message(chat_id=telegramChatID, text="80 %")
 
-policy.eps=0
+policy.eps=0.0625
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
