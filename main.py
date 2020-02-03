@@ -15,8 +15,8 @@ bot = te.Bot(token=telegramToken)
 startingTime=datetime.datetime.now()
 bot.send_message(chat_id=telegramChatID, text="Experiment started "+str(datetime.datetime.now()))
 #842063
-environment = SpEnv.SpEnv(maxLimit = 1893600, verbose=True,operationCost=0,observationWindow=300, output='resultsTrain.csv')
-testEnv = SpEnv.SpEnv(minLimit = 1893601, verbose=True,operationCost=0,observationWindow=300, output='resultsTest.csv')
+environment = SpEnv.SpEnv(maxLimit = 1893600, verbose=True,operationCost=0,observationWindow=600, output='resultsTrain.csv')
+testEnv = SpEnv.SpEnv(minLimit = 1893601, verbose=True,operationCost=0,observationWindow=600, output='resultsTest.csv')
 nb_actions = 3#environment.action_space.n
 
 model = Sequential()
