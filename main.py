@@ -47,7 +47,7 @@ dqn = DQNAgent(
 
 dqn.compile(Adam(lr=1e-3), metrics=['mae'])
 
-dqn.load_weights("Q.weights")
+#dqn.load_weights("Q.weights")
 
 print(datetime.datetime.now())
 
