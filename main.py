@@ -20,12 +20,12 @@ nb_actions = environment.action_space.n
 
 model = Sequential()
 model.add(Flatten(input_shape=(20,) + environment.observation_space.shape))
-model.add(Dense(128))
-model.add(Activation('sigmoid'))
 model.add(Dense(256))
-model.add(Activation('sigmoid'))
-model.add(Dense(128))
-model.add(Activation('sigmoid'))
+model.add(Activation('relu'))
+model.add(Dense(1024))
+model.add(Activation('relu'))
+model.add(Dense(7))
+model.add(Activation('relu'))
 model.add(Dense(nb_actions))
 model.add(Activation('linear'))
 
@@ -34,8 +34,17 @@ policy = EpsGreedyQPolicy(eps = 0.5)
 
 
 memory = SequentialMemory(limit=100000, window_length=20)
-dqn = DQNAgent(model=model, nb_actions=nb_actions,enable_dueling_network=True, memory=memory, nb_steps_warmup=4000,
-target_model_update=1e-2, policy=policy)
+
+dqn = DQNAgent(
+    model=model,
+    nb_actions=nb_actions,
+    enable_dueling_network=False,
+    enable_double_dqn=False,
+    memory=memory,
+    nb_steps_warmup=4000,
+    target_model_update=1e-5,
+    policy=policy)
+
 dqn.compile(Adam(lr=1e-3), metrics=['mae'])
 
 dqn.load_weights("Q.weights")
