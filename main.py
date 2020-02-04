@@ -38,7 +38,7 @@ dqn = DQNAgent(model=model, nb_actions=nb_actions,enable_dueling_network=True, m
 target_model_update=1e-2, policy=policy)
 dqn.compile(Adam(lr=1e-3), metrics=['mae'])
 
-#dqn.load_weights("Q.weights")
+dqn.load_weights("Q.weights")
 
 print(datetime.datetime.now())
 
@@ -58,21 +58,21 @@ dqn.save_weights("Q.weights", overwrite=True)
 
 bot.send_message(chat_id=telegramChatID, text="40 %")
 
-policy.eps=0.25
+policy.eps=0.025
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
 
 bot.send_message(chat_id=telegramChatID, text="60 %")
 
-policy.eps=0.125
+policy.eps=0.0125
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
 
 bot.send_message(chat_id=telegramChatID, text="80 %")
 
-policy.eps=0.0625
+policy.eps=0.00625
 dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
@@ -83,5 +83,7 @@ bot.send_message(chat_id=telegramChatID, text="Training ended - "+str(datetime.d
 print("End of traning")
 print(datetime.datetime.now())
 dqn.test(testEnv, nb_episodes=2000, verbose=0, visualize=False)
+
+
 
 bot.send_message(chat_id=telegramChatID, text="Test ended - "+str(datetime.datetime.now()))
