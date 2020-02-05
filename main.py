@@ -15,7 +15,7 @@ bot = te.Bot(token=telegramToken)
 
 
 
-epochs = 1000
+epochs = 100
 windowLength=1
 
 
@@ -39,7 +39,7 @@ policy = EpsGreedyQPolicy(eps = 0.5)
 
 
 
-memory = SequentialMemory(limit=100000, window_length=windowLength)
+memory = SequentialMemory(limit=1000, window_length=windowLength)
 
 dqn = DQNAgent(
     model=model,
