@@ -13,13 +13,19 @@ from telegramSettings import telegramToken, telegramChatID
 
 bot = te.Bot(token=telegramToken)
 
+
+
+epochs = 1000
+windowLength=1
+
+
 #842063
-environment = SpEnv.SpEnv(maxLimit = 1893600, verbose=True,operationCost=0,observationWindow=600, output='resultsTrain.csv')
-testEnv = SpEnv.SpEnv(minLimit = 1893601, verbose=True,operationCost=0,observationWindow=600, output='resultsTest.csv')
-nb_actions = environment.action_space.n
+trainEnv = SpEnv.SpEnv(maxLimit = 1893600, verbose=True,operationCost=0,observationWindow=600, output='walks/train/walk0.csv')
+testEnv = SpEnv.SpEnv(minLimit = 1893601, verbose=True,operationCost=0,observationWindow=600, output='walks/test/walk0.csv')
+nb_actions = trainEnv.action_space.n
 
 model = Sequential()
-model.add(Flatten(input_shape=(20,) + environment.observation_space.shape))
+model.add(Flatten(input_shape=(windowLength,) + trainEnv.observation_space.shape))
 model.add(Dense(256))
 model.add(Activation('relu'))
 model.add(Dense(1024))
@@ -33,7 +39,7 @@ policy = EpsGreedyQPolicy(eps = 0.5)
 
 
 
-memory = SequentialMemory(limit=100000, window_length=20)
+memory = SequentialMemory(limit=100000, window_length=windowLength)
 
 dqn = DQNAgent(
     model=model,
@@ -49,50 +55,25 @@ dqn.compile(Adam(lr=1e-3), metrics=['mae'])
 
 #dqn.load_weights("Q.weights")
 
-print(datetime.datetime.now())
 
-startingTime=datetime.datetime.now()
-bot.send_message(chat_id=telegramChatID, text="Experiment started - "+str(datetime.datetime.now()))
-
-policy.eps=1
-dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
-dqn.save_weights("Q.weights", overwrite=True)
-
-bot.send_message(chat_id=telegramChatID, text="20 %")
-
-policy.eps= 0.5
-dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
-dqn.save_weights("Q.weights", overwrite=True)
+bot.send_message(chat_id=telegramChatID, text="Experiment started - "+datetime.datetime.now().strftime("%H:%M"))
 
 
-bot.send_message(chat_id=telegramChatID, text="40 %")
+percIncrement = 100/epochs
+perc = 0
+for i in range(epochs):
+    policy.eps=1
+    dqn.fit(trainEnv, nb_steps=10000, visualize=False, verbose=0)
+    dqn.test(testEnv, nb_episodes=20, verbose=0, visualize=False)
+    perc+=percIncrement
+    bot.send_message(chat_id=telegramChatID, text=str(percIncrement)+" % - "+datetime.datetime.now().strftime("%H:%M"))
+    trainEnv.changeOutput("walks/train/walk"+str(i+1)+".csv")
+    testEnv.changeOutput("walks/test/walk"+str(i+1)+".csv")
 
-policy.eps=0.025
-dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
-dqn.save_weights("Q.weights", overwrite=True)
+    
 
 
-bot.send_message(chat_id=telegramChatID, text="60 %")
-
-policy.eps=0.0125
-dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
 dqn.save_weights("Q.weights", overwrite=True)
 
 
-bot.send_message(chat_id=telegramChatID, text="80 %")
-
-policy.eps=0.00625
-dqn.fit(environment, nb_steps=100000, visualize=False, verbose=0)
-dqn.save_weights("Q.weights", overwrite=True)
-
-
-bot.send_message(chat_id=telegramChatID, text="100 %")
-
-bot.send_message(chat_id=telegramChatID, text="Training ended - "+str(datetime.datetime.now()))
-print("End of traning")
-print(datetime.datetime.now())
-dqn.test(testEnv, nb_episodes=2000, verbose=0, visualize=False)
-
-
-
-bot.send_message(chat_id=telegramChatID, text="Test ended - "+str(datetime.datetime.now()))
+bot.send_message(chat_id=telegramChatID, text="Experiment ended - "+datetime.datetime.now().strftime("%H:%M"))

@@ -268,3 +268,5 @@ class SpEnv(gym.Env):
     def changeOutput(self,output = ''):
         if(output!=''):
             self.output=open(output,'w+')
+            self.output.write("episode,date,operation,steps,reward,capital,missPerc,hitPerc,indexIn,timeIn,indexOut,timeOut,hold,long,short,avgRw,day\n")
+        
