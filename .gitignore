@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # csv
-*.csv
+sp500.csv
 
 # Telegram stuff
 telegramSettings.py
