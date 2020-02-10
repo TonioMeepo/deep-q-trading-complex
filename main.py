@@ -66,11 +66,10 @@ for i in range(epochs):
     dqn.fit(trainEnv, nb_steps=10000, visualize=False, verbose=0)
     dqn.test(testEnv, nb_episodes=20, verbose=0, visualize=False)
     perc+=percIncrement
-    bot.send_message(chat_id=telegramChatID, text=str(percIncrement)+" % - "+datetime.datetime.now().strftime("%H:%M"))
+    bot.send_message(chat_id=telegramChatID, text=str(perc)+" % - "+datetime.datetime.now().strftime("%H:%M"))
     trainEnv.changeOutput("walks/train/walk"+str(i+1)+".csv")
     testEnv.changeOutput("walks/test/walk"+str(i+1)+".csv")
 
-    
 
 
 dqn.save_weights("Q.weights", overwrite=True)
