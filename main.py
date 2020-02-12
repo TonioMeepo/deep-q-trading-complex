@@ -15,7 +15,7 @@ bot = te.Bot(token=telegramToken)
 
 
 
-epochs = 100
+epochs = 200
 windowLength=1
 
 
@@ -26,11 +26,11 @@ nb_actions = trainEnv.action_space.n
 
 model = Sequential()
 model.add(Flatten(input_shape=(windowLength,) + trainEnv.observation_space.shape))
-model.add(Dense(256))
+model.add(Dense(512))
 model.add(Activation('relu'))
 model.add(Dense(1024))
 model.add(Activation('relu'))
-model.add(Dense(7))
+model.add(Dense(512))
 model.add(Activation('relu'))
 model.add(Dense(nb_actions))
 model.add(Activation('linear'))
@@ -39,7 +39,9 @@ policy = EpsGreedyQPolicy(eps = 0.5)
 
 
 
-memory = SequentialMemory(limit=1000, window_length=windowLength)
+memory = SequentialMemory(limit=10000, window_length=windowLength)
+
+
 
 dqn = DQNAgent(
     model=model,
@@ -47,8 +49,6 @@ dqn = DQNAgent(
     enable_dueling_network=False,
     enable_double_dqn=False,
     memory=memory,
-    nb_steps_warmup=4000,
-    target_model_update=1e-5,
     policy=policy)
 
 dqn.compile(Adam(lr=1e-3), metrics=['mae'])
