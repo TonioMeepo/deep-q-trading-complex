@@ -10,6 +10,9 @@ from rl.policy import EpsGreedyQPolicy
 import datetime
 import telegram as te
 from telegramSettings import telegramToken, telegramChatID
+from tensorflow.python.framework.ops import disable_eager_execution
+
+disable_eager_execution()
 
 bot = te.Bot(token=telegramToken)
 
