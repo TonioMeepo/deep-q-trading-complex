@@ -1,9 +1,9 @@
 #import IntradayPolicy
 import SpEnv
 import numpy
-from keras.models import Sequential
-from keras.layers import Dense, Activation, Flatten
-from keras.optimizers import Adam
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Activation, Flatten
+from tensorflow.keras.optimizers import Adam
 from rl.agents.dqn import DQNAgent
 from rl.memory import SequentialMemory
 from rl.policy import EpsGreedyQPolicy
@@ -66,7 +66,10 @@ for i in range(epochs):
     dqn.fit(trainEnv, nb_steps=10000, visualize=False, verbose=0)
     dqn.test(testEnv, nb_episodes=20, verbose=0, visualize=False)
     perc+=percIncrement
-    bot.send_message(chat_id=telegramChatID, text=str(perc)+" % - "+datetime.datetime.now().strftime("%H:%M"))
+    try:
+    	bot.send_message(chat_id=telegramChatID, text=str(perc)+" % - "+datetime.datetime.now().strftime("%H:%M"))
+    except:
+        print(str(perc) + " % - " + datetime.datetime.now().strftime("%H:%M"))
     trainEnv.changeOutput("walks/train/walk"+str(i+1)+".csv")
     testEnv.changeOutput("walks/test/walk"+str(i+1)+".csv")
 
