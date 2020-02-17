@@ -1,0 +1,2 @@
+model_checkpoint_path: "Q.weights"
+all_model_checkpoint_paths: "Q.weights"
